@@ -1,5 +1,6 @@
 import { Nav, Provider } from '@components';
 import '@styles/globals.css';
+import Head from 'next/head';
 
 export const metadata = {
     title: "Promptopia",
@@ -9,6 +10,9 @@ export const metadata = {
 const RootLayout = ({ children }) => {
   return (
     <html lang='en'>
+        <head>
+            <link rel="icon" href="/assets/icons/prompt.png" />
+        </head>
         <body>
             <Provider>
                 <div className="main">

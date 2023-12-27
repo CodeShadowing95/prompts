@@ -5,14 +5,18 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { signIn, signOut, useSession, getProviders } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const Nav = () => {
   const { data: session } = useSession();
 
   const [providers, setProviders] = useState(null);
   const [toggleDropdown, setToggleDropdown] = useState(false);
+  const [signedOut, setSignedOut] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
+    signedOut === true && router.push('/');
     // It will allow us to log in with Google and next-auth
     const initProviders = async () => {
       const response = await getProviders();
@@ -41,7 +45,13 @@ const Nav = () => {
         {session?.user ? (
           <div className="flex gap-3 md:gap-5">
             <Link href="/create-prompt" className="black_btn">Create post</Link>
-            <button type="button" className="outline_btn" onClick={signOut}>Sign Out</button>
+            <button type="button" className="outline_btn"
+                onClick={() => {
+                    setSignedOut(true);
+                    signOut();
+                }}>
+                    Sign Out
+            </button>
             <Link href="/profile">
               <Image
                 src={session?.user?.image}
@@ -61,7 +71,10 @@ const Nav = () => {
                 <button
                   type="button"
                   key={provider.name}
-                  onClick={() => signIn(provider.id)}
+                  onClick={() => {
+                    setSignedOut(false);
+                    signIn(provider.id);
+                  }}
                   className="black_btn"
                 >
                   Sign In
@@ -92,6 +105,7 @@ const Nav = () => {
                 <Link href="/create-prompt" className="dropdown_link" onClick={() => setToggleDropdown(false)}>Create Post</Link>
                 <button type="button" onClick={() => {
                   setToggleDropdown(false);
+                  setSignedOut(true);
                   signOut();
                 }}
                 className="mt-5 w-full black_btn"
@@ -108,7 +122,10 @@ const Nav = () => {
                 <button
                   type="button"
                   key={provider.name}
-                  onClick={() => signIn(provider.id)}
+                  onClick={() => {
+                    setSignedOut(false);
+                    signIn(provider.id)
+                  }}
                   className="black_btn"
                 >
                   Sign In

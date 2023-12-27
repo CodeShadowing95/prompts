@@ -4,6 +4,9 @@ import Nav from "./Nav";
 import Profile from "./Profile";
 import PromptCard from "./PromptCard";
 import Provider from "./Provider";
+import Tag from "./Tag";
+import UserCreation from "./UserCreation";
+
 
 export {
     Feed,
@@ -12,4 +15,6 @@ export {
     Profile,
     PromptCard,
     Provider,
+    Tag,
+    UserCreation,
 }

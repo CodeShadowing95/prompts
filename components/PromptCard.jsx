@@ -12,6 +12,15 @@ const PromptCard = ({ post, handleTagClick, handleEdit, handleDelete }) => {
 
   const [copied, setCopied] = useState('');
 
+  const editTags = (p) => {
+    let tags = p.split(',');
+    
+    tags = tags.map(tag => tag.trim().startsWith('#') ? tag : '#' + tag);
+
+    return tags;
+  }
+
+  const hashtags = editTags(post.tag);
 
   const handleCopy = () => {
     setCopied(post.prompt);
@@ -19,10 +28,18 @@ const PromptCard = ({ post, handleTagClick, handleEdit, handleDelete }) => {
     setTimeout(() => setCopied(""), 3000);
   }
 
+  const searchForTag = (t) => {
+    router.push(`/tags?tag=${t}`)
+  }
+
+  const viewUser = (userPost) => {
+    router.push(`/users?email=${userPost.creator.email}&name=${userPost.creator.username}`)
+  }
+
   return (
     <div className="prompt_card">
       <div className="flex justify-between items-start gap-5">
-        <div className="flex-1 flex justify-start items-center gap-3 cursor-pointer">
+        <div className="flex-1 flex justify-start items-center gap-3 cursor-pointer" onClick={() => viewUser(post)}>
           <Image
             src={post.creator.image}
             alt="user_image"
@@ -54,8 +71,12 @@ const PromptCard = ({ post, handleTagClick, handleEdit, handleDelete }) => {
       </div>
 
       <p className="my-4 font-satoshi text-sm text-gray-700">{post.prompt}</p>
-      <p className="font-inter text-sm blue-gradient cursor-pointer" onClick={() => handleTagClick && handleTagClick(post.tag)}>{post.tag}</p>
-      
+      <div className="flex gap-1">
+        {hashtags.map((tag) => (
+            <p className="font-inter text-sm blue-gradient cursor-pointer hover:underline" onClick={() => searchForTag(tag.substring(1))}>{tag}</p>
+        ))}
+      </div>
+
       {/* The code block `{session?.user.id === post.creator.id && pathName === '/profile' && (...)}` is
       checking if the current user's ID matches the ID of the post creator and if the current path is
       '/profile'. If both conditions are true, it will render the content inside the parentheses. */}
